@@ -23,6 +23,17 @@ kotlin {
     jvmToolchain(8)
 }
 
+tasks.run {
+    def botProperties = new Properties()
+    def botPropertiesFile = file('bot.properties')
+    if (botPropertiesFile.exists()) {
+        botProperties.load(botPropertiesFile.newInputStream())
+    } else {
+        logger.info("bot.properties not found! Using defaults.")
+    }
+    systemProperties(botProperties)
+}
+
 application {
     mainClassName = 'MainKt'
 }
