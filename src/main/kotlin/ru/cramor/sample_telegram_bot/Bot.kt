@@ -1,11 +1,16 @@
+package ru.cramor.sample_telegram_bot
+
+import org.springframework.stereotype.Service
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
-import repository.UserRepository
+import ru.cramor.sample_telegram_bot.repository.UserRepository
 
-class Bot(val username: String, token: String, val repository: UserRepository) : TelegramLongPollingBot(token) {
 
-    override fun getBotUsername(): String = username
+@Service
+class Bot(val properties: BotProperties, val repository: UserRepository) : TelegramLongPollingBot(properties.token) {
+
+    override fun getBotUsername(): String = properties.username
 
     override fun onUpdateReceived(update: Update) {
         val message = update.message
@@ -19,7 +24,7 @@ class Bot(val username: String, token: String, val repository: UserRepository) :
         }
     }
 
-    fun sendMessage(id: Long, text: String) {
+    private fun sendMessage(id: Long, text: String) {
         val message = SendMessage.builder().chatId(id).text(text).build()
         execute(message)
     }
